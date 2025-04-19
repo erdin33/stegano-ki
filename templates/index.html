@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>DCT Steganography</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="logo">🕵️‍♂️ HideIt</div>
+            <ul class="nav-links">
+                <li><a href="#embed-section">Embedded Pesan</a></li>
+                <li><a href="#extract-section">Our Team</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% if error %}
+        <div class="error-box">
+            <p style="color:red;">⚠️ {{ error }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Section Embed -->
+        <section id="embed-section" class="form-section">
+            <h2>🔐 Sisipkan Pesan ke Gambar</h2>
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <input type="file" name="image" required>
+                <input type="text" name="message" placeholder="Tulis pesan rahasia..." required>
+                <button name="action" value="embed">Sisipkan Pesan</button>
+            </form>
+
+            {% if result and original and not extracted %}
+            <div class="result-box">
+                <h3><span class="success">✅</span> Hasil Penyisipan</h3>
+
+                <div class="image-block">
+                    <p><strong>Gambar Asli:</strong></p>
+                    <img src="{{ url_for('uploaded_file', filename=original) }}" alt="Original Image" class="result-image">
+                </div>
+
+                <div class="image-block">
+                    <p><strong>Gambar dengan Pesan:</strong></p>
+                    <img src="{{ url_for('uploaded_file', filename=result) }}" alt="Stego Image" class="result-image">
+                </div>
+
+                <a href="{{ url_for('download_file', filename=result) }}" class="btn-download">⬇️ Download Gambar</a>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Section Extract -->
+        <section id="extract-section" class="form-section">
+            <h2>🔍 Ambil Pesan dari Gambar</h2>
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <input type="file" name="image" required>
+                <button name="action" value="extract">Extract Pesan</button>
+            </form>
+
+            {% if extracted %}
+            <div class="result-box">
+                <h3>📤 Pesan Tersembunyi:</h3>
+                <p style="font-weight: bold; color: darkgreen;">"{{ extracted }}"</p>
+
+                {% if result %}
+                <div class="image-block">
+                    <p><strong>Gambar yang Diperiksa:</strong></p>
+                    <img src="{{ url_for('uploaded_file', filename=result) }}" alt="Image for Extraction" class="result-image">
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+<footer id="footer">
+    <div class="footer-container">
+            <p>&copy; 2025 HideIt. Mata Kuliah Keamanan Informasi</p>
+        </div>
+</footer>
+
+</body>
+</html>
