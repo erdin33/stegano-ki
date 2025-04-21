@@ -254,20 +254,20 @@ button:hover {
     color: green;
 }
 
-/* Footer Styling */
-#footer {
+
+footer {
     background-color: var(--primary-color);
-    padding: 20px 0;
+    color: #F5F5F5;
+    padding: 2rem 0;
     text-align: center;
-    color: white;
-    width: 100%;
-}
-
-.footer-container p {
-    color: #ffffff;
-    font-size: 1rem;
-}
-
+    margin-top: 3rem;
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
 /* Optional: Add responsiveness for smaller screens */
 @media (max-width: 768px) {
     .nav-links {
