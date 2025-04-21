@@ -152,6 +152,15 @@ def index():
             )
 
     return render_template('index.html')
+@app.route('/index.html')
+def index_html():
+     return index()
+ 
+ 
+@app.route('/stegano')
+@app.route('/stegano.html') 
+def stegano_page():
+     return render_template('stegano.html')
 
 @app.route('/cancel-upload', methods=['POST'])
 def cancel_upload():
