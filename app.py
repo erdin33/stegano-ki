@@ -1,14 +1,14 @@
 import os
 import uuid
-import numpy as np
-import cv2
 from flask import Flask, render_template, request, send_from_directory, session
-from PIL import Image
-from io import BytesIO
+from werkzeug.utils import secure_filename
+import cv2
+import numpy as np
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-app.secret_key = 'your_secret_key'  # Untuk session
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'static', 'uploads')
+app.secret_key = 'your_secret_key'
 
 # Pastikan folder upload ada
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -19,6 +19,11 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def generate_safe_filename(filename):
+    ext = os.path.splitext(filename)[1]
+    base_name = os.path.splitext(filename)[0][:50]  # Potong nama file menjadi 50 karakter
+    return f"{str(uuid.uuid4())}{ext}"
 
 class DCTSteganography:
     def __init__(self, alpha=6):
@@ -37,7 +42,7 @@ class DCTSteganography:
     def embed_text(self, image_path, text, output_path):
         img = cv2.imread(image_path)
         ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-        y = ycrcb[:, :, 0].astype(float)
+        y = ycrcb[:, :, 0].astype(np.float32)
         h, w = y.shape
 
         h_pad = 8 - (h % 8) if h % 8 != 0 else 0
@@ -63,7 +68,7 @@ class DCTSteganography:
                 q_block[0, 0] = np.clip(q_block[0, 0], -1024, 1023)
 
                 dct_block = q_block * (self.quant * self.alpha)
-                y[i:i+8, j:j+8] = cv2.idct(dct_block)
+                y[i:i+8, j:j+8] = cv2.idct(dct_block.astype(np.float32))
                 bit_idx += 1
 
         y = y[:h, :w]
@@ -74,7 +79,7 @@ class DCTSteganography:
     def extract_text(self, image_path):
         img = cv2.imread(image_path)
         ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-        y = ycrcb[:, :, 0].astype(float)
+        y = ycrcb[:, :, 0].astype(np.float32)
 
         binary_message = ""
         chars = []
@@ -105,13 +110,18 @@ def index():
         if not file or not allowed_file(file.filename):
             return render_template('index.html', error="File harus berupa gambar (PNG, JPG, JPEG).")
 
-        filename = str(uuid.uuid4()) + '_' + file.filename
+        # Generate nama file aman
+        filename = generate_safe_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
 
-        # Simpan nama file di sesi untuk pembatalan
+        try:
+            if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
+            file.save(filepath)
+        except Exception as e:
+            return render_template('index.html', error=f"Error saving file: {str(e)}")
+
         session['uploaded_file'] = filename
-
         steg = DCTSteganography()
 
         if action == 'embed':
@@ -128,7 +138,7 @@ def index():
                 original=filename,
                 result=output_filename,
                 extracted=None,
-                uploaded_file=filename  # Kirim nama file ke template
+                uploaded_file=filename
             )
 
         elif action == 'extract':
@@ -138,7 +148,7 @@ def index():
                 original=None,
                 result=filename,
                 extracted=extracted_text,
-                uploaded_file=filename  # Kirim nama file ke template
+                uploaded_file=filename
             )
 
     return render_template('index.html')
@@ -153,8 +163,8 @@ def cancel_upload():
 
     try:
         if os.path.exists(filepath):
-            os.remove(filepath)  # Hapus file dari server
-            session.pop('uploaded_file', None)  # Hapus nama file dari sesi
+            os.remove(filepath)
+            session.pop('uploaded_file', None)
             return render_template('index.html', error=f"File {filename} berhasil dibatalkan.")
         else:
             return render_template('index.html', error=f"File {filename} tidak ditemukan.")
@@ -164,12 +174,9 @@ def cancel_upload():
 @app.route('/delete/<filename>', methods=['POST'])
 def delete_file(filename):
     try:
-        # Path lengkap ke file
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        
-        # Periksa apakah file ada
         if os.path.exists(file_path):
-            os.remove(file_path)  # Hapus file
+            os.remove(file_path)
             return render_template('index.html', error=f"Gambar {filename} berhasil dihapus.")
         else:
             return render_template('index.html', error=f"Gambar {filename} tidak ditemukan.")
@@ -182,11 +189,11 @@ def uploaded_file(filename):
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    # Kirim file dari direktori UPLOAD_FOLDER
     return send_from_directory(
-        directory=app.config['UPLOAD_FOLDER'],  # Direktori tempat file disimpan
-        path=filename,  # Nama file yang ingin dikirim
-        as_attachment=True  # Mengunduh file sebagai attachment
+        directory=app.config['UPLOAD_FOLDER'],
+        path=filename,
+        as_attachment=True
     )
+
 if __name__ == '__main__':
     app.run(debug=True)
