@@ -9,15 +9,13 @@
 
     <div class="top-navbar">
         <div class="navbar-container">
-          <div class="logo"> 🕵️‍♂️ HideIt
-          </div>
+          <div class="logo"> 🕵️‍♂️ HideIt </div>
           <div class="nav-links">
             <a href="index.html" class="about-btn">Embedded Text</a>
-            <a href="stegano.html" >About Steganografi</a>
+            <a href="stegano.html">About Steganografi</a>
           </div>
         </div>
-      </div>
-
+    </div>
 
     <main>
         {% if error %}
@@ -30,10 +28,11 @@
         <section id="embed-section" class="form-section">
             <h2>🔐 Sisipkan Pesan ke Gambar</h2>
             <form action="/" method="POST" enctype="multipart/form-data">
-                <input type="file" name="image" required>
+                <input type="file" name="image" id="image-input" required>
                 <input type="text" name="message" placeholder="Tulis pesan rahasia..." required>
                 <button name="action" value="embed">Sisipkan Pesan</button>
             </form>
+
 
             {% if result and original and not extracted %}
             <div class="result-box">
@@ -50,6 +49,9 @@
                 </div>
 
                 <a href="{{ url_for('download_file', filename=result) }}" class="btn-download">⬇️ Download Gambar</a>
+                <form action="{{ url_for('delete_file', filename=result) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-delete">❌ Hapus Gambar</button>
+                </form>
             </div>
             {% endif %}
         </section>
@@ -83,7 +85,8 @@
         <div class="footer-content">
             <p>&copy; 2025 Kelompok 8B - Keamanan informasi</p>
             <p>Website edukasi tentang steganografi dan aplikasinya</p>
-      </footer>
+        </div>
+    </footer>
 
 </body>
 </html>
