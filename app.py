@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, send_from_directory, send_fil
 from PIL import Image
 from io import BytesIO
 
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
@@ -133,6 +134,17 @@ def index():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+@app.route('/index.html')
+def index_html():
+    return index()
+
+
+@app.route('/stegano')
+@app.route('/stegano.html')  # Add this second route to handle both URLs
+def stegano_page():
+    return render_template('stegano.html')
 
 @app.route('/download/<filename>')
 def download_file(filename):

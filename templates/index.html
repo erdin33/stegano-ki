@@ -6,15 +6,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <nav class="nav-container">
-            <div class="logo">🕵️‍♂️ HideIt</div>
-            <ul class="nav-links">
-                <li><a href="#embed-section">Embedded Pesan</a></li>
-                <li><a href="#extract-section">Our Team</a></li>
-            </ul>
-        </nav>
-    </header>
+
+    <div class="top-navbar">
+        <div class="navbar-container">
+          <div class="logo"> 🕵️‍♂️ HideIt
+          </div>
+          <div class="nav-links">
+            <a href="index.html" class="about-btn">Embedded Text</a>
+            <a href="stegano.html" >About Steganografi</a>
+          </div>
+        </div>
+      </div>
+
 
     <main>
         {% if error %}
@@ -76,11 +79,11 @@
     </main>
 
     <!-- Footer Section -->
-<footer id="footer">
-    <div class="footer-container">
-            <p>&copy; 2025 HideIt. Mata Kuliah Keamanan Informasi</p>
-        </div>
-</footer>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Kelompok 8B - Keamanan informasi</p>
+            <p>Website edukasi tentang steganografi dan aplikasinya</p>
+      </footer>
 
 </body>
 </html>

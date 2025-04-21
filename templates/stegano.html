@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steganografi - Seni Pesan Tersembunyi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stegano.css') }}">
+</head>
+
+<body>
+  <!-- Navbar baru di atas header -->
+  <div class="top-navbar">
+    <div class="navbar-container">
+      <div class="logo"> 🕵️‍♂️ HideIt
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Embedded Text</a>
+        <a href="#pengertian" class="about-btn">About Steganografi</a>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-overlay"></div>
+    <div class="header-content">
+      <h1>STEGANOGRAFI</h1>
+      <p>Seni Menyembunyikan Pesan dalam Media Digital</p>
+    </div>
+  </header>
+  
+  <nav>
+    <ul>
+      <li><a href="#pengertian">Pengertian</a></li>
+      <li><a href="#sejarah">Sejarah</a></li>
+      <li><a href="#teknik">Teknik</a></li>
+      <li><a href="#aplikasi">Aplikasi</a></li>
+      <li><a href="#keamanan">Keamanan</a></li>
+    </ul>
+  </nav>
+  
+  <main>
+    <div class="container">
+      <section id="pengertian">
+        <h2>Pengertian Steganografi</h2>
+        <p>Steganografi berasal dari bahasa Yunani, "<span class="highlight">steganos</span>" yang berarti "tersembunyi" dan "<span class="highlight">graphein</span>" yang berarti "menulis". Secara harfiah, steganografi adalah seni dan ilmu menyembunyikan pesan rahasia di dalam media lain sehingga keberadaan pesan tersebut tidak terdeteksi oleh pihak ketiga.</p>
+        
+        <p>Berbeda dengan kriptografi yang berfokus pada mengacak pesan sehingga tidak dapat dibaca, steganografi berfokus pada menyembunyikan fakta bahwa komunikasi rahasia sedang terjadi. Metode ini memanfaatkan kelebihan sensori manusia yang terbatas dalam mendeteksi perubahan kecil pada media seperti gambar, audio, video, atau teks.</p>
+        
+        <div class="card-container">
+          <div class="card">
+            <div class="card-img">Steganografi vs Kriptografi</div>
+            <div class="card-content">
+              <h3>Perbedaan Utama</h3>
+              <p>Kriptografi mengubah pesan menjadi kode rahasia, sementara steganografi menyembunyikan keberadaan pesan itu sendiri dalam media lain.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-img">Media Steganografi</div>
+            <div class="card-content">
+              <h3>Berbagai Media</h3>
+              <p>Steganografi dapat diterapkan pada berbagai media digital seperti gambar, audio, video, dan bahkan protokol jaringan.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-img">Prinsip Dasar</div>
+            <div class="card-content">
+              <h3>Konsep Utama</h3>
+              <p>Prinsip dasar steganografi adalah memanfaatkan redundansi data dalam file digital untuk menyisipkan informasi rahasia.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="sejarah">
+        <h2>Sejarah Steganografi</h2>
+        <p>Steganografi memiliki sejarah panjang yang dapat ditelusuri hingga ribuan tahun yang lalu. Teknik penyembunyian pesan telah digunakan sejak zaman kuno sebagai cara untuk mengirimkan informasi rahasia.</p>
+        
+        <div class="timeline">
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <h3>Zaman Yunani Kuno (440 SM)</h3>
+              <p>Herodotus, sejarawan Yunani, mencatat penggunaan steganografi berupa penulisan pesan di atas kepala budak yang telah dicukur. Setelah rambut tumbuh kembali, budak dikirim kepada penerima pesan yang kemudian mencukur kembali rambut budak untuk membaca pesan tersebut.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <h3>Abad Pertengahan</h3>
+              <p>Penggunaan tinta tidak terlihat (tinta simpati) yang hanya bisa dibaca ketika kertas dipanaskan atau direaksikan dengan bahan kimia tertentu.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <h3>Perang Dunia II</h3>
+              <p>Penggunaan microdots oleh mata-mata Jerman, di mana informasi direduksi hingga ukuran titik kecil dan disembunyikan dalam teks biasa.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <h3>Era Digital (1990an)</h3>
+              <p>Munculnya steganografi digital dengan teknik penyisipan pesan dalam berkas digital seperti gambar, audio, dan video.</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <h3>Era Modern</h3>
+              <p>Pengembangan algoritma steganografi yang lebih canggih dan tahan terhadap deteksi. Penggunaan steganografi untuk melindungi hak cipta dengan teknik watermarking digital.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="teknik">
+        <h2>Teknik Steganografi</h2>
+        <p>Terdapat berbagai teknik steganografi yang dapat digunakan untuk menyembunyikan informasi dalam berbagai jenis media. Berikut adalah beberapa teknik umum yang digunakan dalam steganografi modern:</p>
+        
+        <div class="card-container">
+          <div class="card">
+            <div class="card-img">LSB (Least Significant Bit)</div>
+            <div class="card-content">
+              <h3>Modifikasi Bit Terkecil</h3>
+              <p>Teknik yang paling umum digunakan dalam steganografi digital adalah mengganti bit paling tidak signifikan dari byte dalam file dengan bit dari pesan rahasia.</p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-img">DCT (Discrete Cosine Transform)</div>
+            <div class="card-content">
+              <h3>Transformasi Kosinus Diskrit</h3>
+              <p>Teknik yang digunakan dalam format kompresi JPEG, di mana pesan disembunyikan dengan memodifikasi koefisien DCT.</p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-img">Echo Hiding</div>
+            <div class="card-content">
+              <h3>Penyembunyian Gema</h3>
+              <p>Dalam file audio, informasi disembunyikan dengan menambahkan gema pada sinyal suara asli dengan variasi delay yang berbeda.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="aplikasi">
+        <h2>Aplikasi Steganografi</h2>
+        <p>Steganografi memiliki berbagai aplikasi praktis di dunia modern, beberapa di antaranya termasuk:</p>
+        
+        <ul style="padding-left: 2rem; margin-bottom: 1.5rem;">
+          <li>Watermarking Digital untuk perlindungan hak cipta</li>
+          <li>Komunikasi rahasia untuk keperluan militer dan diplomatik</li>
+          <li>Penyembunyian data medis pasien dalam gambar medis</li>
+          <li>Keamanan transaksi perbankan elektronik</li>
+          <li>Menghindari sensor internet di negara dengan pembatasan akses</li>
+        </ul>
+        
+        <p>Steganografi juga digunakan untuk menyembunyikan data dalam blok metadata file, header file, atau dalam ruang kosong file digital.</p>
+      </section>
+      
+      <section id="keamanan">
+        <h2>Steganografi dan Keamanan Digital</h2>
+        <p>Meskipun steganografi memiliki banyak aplikasi yang sah, teknik ini juga dapat disalahgunakan. Berikut beberapa aspek penting terkait keamanan:</p>
+        
+        <div class="card-container">
+          <div class="card">
+            <div class="card-img">Steganalisis</div>
+            <div class="card-content">
+              <h3>Deteksi Steganografi</h3>
+              <p>Steganalisis adalah ilmu dan seni untuk mendeteksi pesan tersembunyi dalam file yang telah disisipi dengan teknik steganografi.</p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-img">Kombinasi dengan Kriptografi</div>
+            <div class="card-content">
+              <h3>Keamanan Berlapis</h3>
+              <p>Kombinasi steganografi dengan kriptografi memberikan tingkat keamanan ganda, di mana pesan dienkripsi terlebih dahulu sebelum disembunyikan.</p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-img">Tantangan Hukum</div>
+            <div class="card-content">
+              <h3>Aspek Legal</h3>
+              <p>Penggunaan steganografi menimbulkan tantangan bagi penegak hukum dalam mendeteksi komunikasi terlarang dan konten ilegal.</p>
+            </div>
+          </div>
+        </div>
+        
+        <p style="margin-top: 2rem;">Penting untuk memahami etika dan hukum terkait penggunaan steganografi. Seperti banyak teknologi lainnya, steganografi sendiri bersifat netral dan nilai etisnya bergantung pada bagaimana ia digunakan.</p>
+        
+        <a href="#" class="btn">Pelajari Lebih Lanjut</a>
+      </section>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Kelompok 8B - Keamanan informasi</p>
+      <p>Website edukasi tentang steganografi dan aplikasinya</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -33,6 +33,99 @@ header {
     color: white;
 }
 
+
+.top-navbar {
+    background-color: var(--primary-color);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    color: #f5f5f5;
+    font-weight: 500;
+    font-size: 2rem;
+  }
+  
+  
+  .logo-text {
+    color: #f5f5f5;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-links a {
+    color: #ccd6f6;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-links a:hover {
+    color: #64ffda;
+  }
+  
+  .about-btn {
+    background-color: transparent;
+    border: 1px solid #64ffda;
+    color: #64ffda !important;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .about-btn:hover {
+    background-color: rgba(100, 255, 218, 0.1);
+  }
+  
+  /* Sesuaikan header untuk tidak bertabrakan dengan navbar */
+  header {
+    margin-top: 0;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .navbar-container {
+      flex-direction: column;
+      padding: 1rem;
+    }
+    
+    .logo {
+      margin-bottom: 1rem;
+    }
+    
+    .nav-links {
+      width: 100%;
+      justify-content: space-around;
+    }
+    
+    .nav-links a {
+      margin: 0 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+
+
 .nav-container {
     max-width: 1000px;
     margin: auto;
@@ -161,20 +254,20 @@ button:hover {
     color: green;
 }
 
-/* Footer Styling */
-#footer {
+
+footer {
     background-color: var(--primary-color);
-    padding: 20px 0;
+    color: #F5F5F5;
+    padding: 2rem 0;
     text-align: center;
-    color: white;
-    width: 100%;
-}
-
-.footer-container p {
-    color: #ffffff;
-    font-size: 1rem;
-}
-
+    margin-top: 3rem;
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
 /* Optional: Add responsiveness for smaller screens */
 @media (max-width: 768px) {
     .nav-links {
