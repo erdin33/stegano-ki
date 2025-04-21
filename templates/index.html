@@ -33,15 +33,6 @@
                 <button name="action" value="embed">Sisipkan Pesan</button>
             </form>
 
-            {% if uploaded_file %}
-            <div class="cancel-upload-section">
-                <p>File yang dipilih: {{ uploaded_file }}</p>
-                <form action="/cancel-upload" method="POST">
-                    <input type="hidden" name="filename" value="{{ uploaded_file }}">
-                    <button type="submit" class="btn-cancel">❌ Batalkan Upload</button>
-                </form>
-            </div>
-            {% endif %}
 
             {% if result and original and not extracted %}
             <div class="result-box">
