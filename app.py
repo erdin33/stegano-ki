@@ -2,16 +2,23 @@ import os
 import uuid
 import numpy as np
 import cv2
-from flask import Flask, render_template, request, send_from_directory, send_file
+from flask import Flask, render_template, request, send_from_directory, session
 from PIL import Image
 from io import BytesIO
 
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.secret_key = 'your_secret_key'  # Untuk session
 
+# Pastikan folder upload ada
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# Daftar ekstensi file yang diizinkan
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class DCTSteganography:
     def __init__(self, alpha=6):
@@ -95,12 +102,15 @@ def index():
         action = request.form.get('action')
         file = request.files.get('image')
 
-        if not file:
-            return render_template('index.html', error="Image wajib diisi.")
+        if not file or not allowed_file(file.filename):
+            return render_template('index.html', error="File harus berupa gambar (PNG, JPG, JPEG).")
 
         filename = str(uuid.uuid4()) + '_' + file.filename
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
+
+        # Simpan nama file di sesi untuk pembatalan
+        session['uploaded_file'] = filename
 
         steg = DCTSteganography()
 
@@ -117,7 +127,8 @@ def index():
                 'index.html',
                 original=filename,
                 result=output_filename,
-                extracted=None
+                extracted=None,
+                uploaded_file=filename  # Kirim nama file ke template
             )
 
         elif action == 'extract':
@@ -126,38 +137,56 @@ def index():
                 'index.html',
                 original=None,
                 result=filename,
-                extracted=extracted_text
+                extracted=extracted_text,
+                uploaded_file=filename  # Kirim nama file ke template
             )
 
     return render_template('index.html')
+
+@app.route('/cancel-upload', methods=['POST'])
+def cancel_upload():
+    filename = request.form.get('filename')
+    if not filename:
+        return render_template('index.html', error="Nama file tidak ditemukan.")
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    try:
+        if os.path.exists(filepath):
+            os.remove(filepath)  # Hapus file dari server
+            session.pop('uploaded_file', None)  # Hapus nama file dari sesi
+            return render_template('index.html', error=f"File {filename} berhasil dibatalkan.")
+        else:
+            return render_template('index.html', error=f"File {filename} tidak ditemukan.")
+    except Exception as e:
+        return render_template('index.html', error=f"Gagal membatalkan upload: {str(e)}")
+
+@app.route('/delete/<filename>', methods=['POST'])
+def delete_file(filename):
+    try:
+        # Path lengkap ke file
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        
+        # Periksa apakah file ada
+        if os.path.exists(file_path):
+            os.remove(file_path)  # Hapus file
+            return render_template('index.html', error=f"Gambar {filename} berhasil dihapus.")
+        else:
+            return render_template('index.html', error=f"Gambar {filename} tidak ditemukan.")
+    except Exception as e:
+        return render_template('index.html', error=f"Gagal menghapus gambar: {str(e)}")
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
-@app.route('/index.html')
-def index_html():
-    return index()
-
-
-@app.route('/stegano')
-@app.route('/stegano.html')  # Add this second route to handle both URLs
-def stegano_page():
-    return render_template('stegano.html')
-
 @app.route('/download/<filename>')
 def download_file(filename):
-    if filename.endswith('.webp'):
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        with Image.open(image_path) as img:
-            img_byte_arr = BytesIO()
-            img.convert('RGB').save(img_byte_arr, format='PNG')
-            img_byte_arr.seek(0)
-            return send_file(img_byte_arr, mimetype='image/png', as_attachment=True,
-                             download_name=f'{os.path.splitext(filename)[0]}.png')
-    else:
-        return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename), as_attachment=True)
-
+    # Kirim file dari direktori UPLOAD_FOLDER
+    return send_from_directory(
+        directory=app.config['UPLOAD_FOLDER'],  # Direktori tempat file disimpan
+        path=filename,  # Nama file yang ingin dikirim
+        as_attachment=True  # Mengunduh file sebagai attachment
+    )
 if __name__ == '__main__':
     app.run(debug=True)
