@@ -6,15 +6,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <nav class="nav-container">
-            <div class="logo">🕵️‍♂️ HideIt</div>
-            <ul class="nav-links">
-                <li><a href="#embed-section">Embedded Pesan</a></li>
-                <li><a href="#extract-section">Our Team</a></li>
-            </ul>
-        </nav>
-    </header>
+
+    <div class="top-navbar">
+        <div class="navbar-container">
+          <div class="logo"> 🕵️‍♂️ HideIt
+          </div>
+          <div class="nav-links">
+            <a href="index.html" class="about-btn">Embedded Text</a>
+            <a href="stegano.html" >About Steganografi</a>
+          </div>
+        </div>
+      </div>
+
 
     <main>
         {% if error %}
